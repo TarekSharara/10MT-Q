@@ -1,6 +1,6 @@
 /* 10m MT Qual – offline service worker. Change VERSION after every update of index.html */
 const PREFIX = "mtq-qual-";
-const VERSION = PREFIX + "v2";
+const VERSION = PREFIX + "v3";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./mtq-icon-180.png", "./mtq-icon-192.png", "./mtq-icon-512.png"];
 
 self.addEventListener("install", e => {
