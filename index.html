@@ -51,6 +51,10 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 h1{font-family:var(--f-disp); font-weight:700; font-size:clamp(28px,4vw,42px); line-height:1.15; margin:2px 0 4px; text-wrap:balance}
 .lead{margin:0; color:var(--muted); max-width:62ch}
 .hdr-side{display:flex; flex-direction:column; gap:10px; align-items:flex-end}
+.hdr-top{display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; width:100%}
+.hdr-top>div:first-child{flex:1 1 520px; min-width:0}
+.aibox{flex:0 1 auto; border:2px solid #E0362C; color:#E0362C; padding:22px 18px; text-align:center; font-weight:700; line-height:1.7; font-size:clamp(14px,1.6vw,17px); font-family:Arial,"Segoe UI",sans-serif; background:transparent; margin-inline:auto}
+.aibox[hidden]{display:none}
 .langbtn{border:1px solid var(--line); background:var(--panel); border-radius:999px; padding:6px 16px; font-weight:700; cursor:pointer}
 .phasechips{display:flex; gap:6px; flex-wrap:wrap}
 .pchip{border:1px solid var(--line); background:var(--panel); color:var(--muted); border-radius:999px; padding:4px 12px; font-size:13px; cursor:pointer}
@@ -80,11 +84,11 @@ nav.tabs button[aria-selected="true"]{color:var(--ink); border-bottom-color:var(
 .steptitle{font-family:var(--f-disp); font-size:22px; font-weight:700; margin:6px 0 10px; line-height:1.35}
 .cmdbox{background:var(--navy); color:var(--navy-ink); border-radius:10px; padding:10px 14px; margin-bottom:10px}
 .cmdbox .cap{font-size:12px; opacity:.8; margin-bottom:4px}
-.cmdrow{display:grid; grid-template-columns:1fr auto; gap:2px 12px; padding:5px 0; border-top:1px solid rgba(255,255,255,.12)}
+.cmdrow{display:grid; grid-template-columns:1fr; gap:2px 12px; padding:6px 0; border-top:1px solid rgba(255,255,255,.12)}
 .cmdrow:first-of-type{border-top:0}
 .cmdrow .c{font-family:var(--f-mono); font-weight:600; font-size:14px; direction:ltr; text-align:start; overflow-wrap:anywhere}
 body[dir="rtl"] .cmdrow .c{text-align:right}
-.cmdrow .at{font-family:var(--f-mono); font-size:12.5px; opacity:.85; direction:ltr}
+.cmdrow .at{font-size:12.5px; opacity:.85; unicode-bidi:plaintext; text-align:start}
 .desc{margin:0 0 10px}
 .chip{display:inline-grid; place-items:center; width:22px; height:22px; border-radius:50%; font-size:12px; font-weight:700; border:1px solid rgba(0,0,0,.25); vertical-align:-5px; font-family:var(--f-mono)}
 .ref{font-size:12px; color:var(--muted); font-family:var(--f-mono)}
@@ -279,11 +283,14 @@ body[dir="rtl"] .resrow .boardcard{order:0}
 <body>
 <div class="wrap">
   <header class="hdr">
+    <div class="hdr-top">
     <div>
       <p class="eyebrow" id="eyebrow"></p>
       <h1 id="h1"></h1>
       <p class="lead" id="lead"></p>
       <p class="byline" id="byline"></p>
+    </div>
+    <div class="aibox" id="aivoice" hidden></div>
     </div>
     <div class="hdr-side">
       <div class="row"><div class="seg evseg" role="group" aria-label="Event"><button id="evm" aria-pressed="true"></button><button id="evw" aria-pressed="false"></button></div><button class="langbtn" id="sndbtn" aria-pressed="true"></button><button class="langbtn" id="fsbtn" hidden></button><button class="langbtn" id="langbtn"></button></div>
@@ -344,7 +351,9 @@ body[dir="rtl"] .resrow .boardcard{order:0}
           <div class="row"><span class="small" id="speedl"></span><div class="seg" role="group"><button id="sp1" aria-pressed="true">×1</button><button id="sp2" aria-pressed="false">×2</button><button id="sp4" aria-pressed="false">×4</button><button id="sp8" aria-pressed="false">×8</button><button id="sp16" aria-pressed="false">×16</button></div>
             <label class="row small" style="margin-inline-start:auto"><input type="checkbox" id="quizme"><span id="quizmel"></span></label></div>
           <div class="row"><button class="btn" id="bvoice"></button><select class="grow" id="vmode" aria-label="Narration"></select></div>
-          <div class="row"><select class="grow" id="vrate" aria-label="Rate"></select><select class="grow" id="vvoice" aria-label="Voice"></select></div>
+          <div class="row"><select class="grow" id="vrate" aria-label="Rate"></select></div>
+          <div class="row" style="align-items:center"><label class="small" for="vvoice" id="vvoicel" style="min-width:7.5em"></label><select class="grow" id="vvoice" aria-label="English voice"></select><button class="btn" id="vtesten" type="button">▶</button></div>
+          <div class="row" style="align-items:center"><label class="small" for="vvoicear" id="vvoicearl" style="min-width:7.5em"></label><select class="grow" id="vvoicear" aria-label="Arabic voice"></select><button class="btn" id="vtestar" type="button">▶</button></div>
           <div class="row"><select class="grow" id="scen" aria-label="Scenario"></select><button class="btn" id="bstart"></button></div>
           <p class="small" id="scennote" style="margin:0"></p>
           <p class="small kbd" id="kbdhint" style="margin:0"></p>
@@ -416,7 +425,7 @@ ar:{eyebrow:"تأهيل الفرق المختلطة · 30 طلقة لكل لاع
  step:"الخطوة",of:"من",cmdcap:"أوامر رئيس ضباط الميدان (CRO) وتوقيتها",nocmd:"لا يوجد أمر في هذه الخطوة",train:"⏱ تدريب رئيس ضباط الميدان بالزمن الحقيقي من هنا",
  sayAt:"عند الصفر قل:",sayNow:"قل الآن",wait:"انتظر",pause:"إيقاف مؤقت",resume:"استئناف",nextStage:"المرحلة التالية",close:"إغلاق",auto:"أكمل التالي تلقائياً",beep:"تنبيه صوتي",
  prev:"→ السابق",next:"التالي ←",play:"▶ تشغيل",stop:"■ إيقاف",speed:"السرعة",quizme:"اختبرني قبل كل خطوة",
- voiceOn:"🔊 تشغيل الشرح الصوتي",voiceOff:"🔇 إيقاف الشرح الصوتي",vmode:["الشرح والأوامر","الأوامر فقط"],vrate:["قراءة عادية","قراءة بطيئة","قراءة سريعة"],novoice:"الصوت الافتراضي للجهاز",
+ voiceOn:"🔊 تشغيل الشرح الصوتي",voiceOff:"🔇 إيقاف الشرح الصوتي",vmode:["الشرح والأوامر","الأوامر فقط"],vrate:["قراءة عادية","قراءة بطيئة","قراءة سريعة"],novoice:"الصوت الافتراضي للجهاز",vEnL:"الصوت الإنجليزي (الأوامر)",vArL:"الصوت العربي (الشرح)",
  scen:["سيناريو نتائج جديد…","تعادل على المركز الرابع (القاعدة 6.15.5)","مخالفة: طلقة قبل بدء الإعداد والاختبار","مخالفة: إطلاق الهواء قبل الإعداد (صفراء ثم خضراء)","مخالفة: طلقة بعد END OF PREPARATION … STOP","مخالفة: طلقة اختبار بعد بدء المباراة","مخالفة: إطلاق الهواء بعد البدء دون إصابة","مخالفة: طلقة متقاطعة على هدف لاعب آخر","مخالفة: 31 طلقة للاعب","مخالفة: طلقة بعد STOP","مخالفة: طلقتان لم تُطلقا في الوقت","وصول متأخر","انقطاع أكثر من 5 دقائق ونقل اللاعب","تعمير السلاح بأكثر من رشة","عطل في السلاح","كل الحالات في قطار واحد"],fromStart:"من البداية",
  usenames:"استخدام أسماء اللاعبين",nameshelp:"اكتب اسم العائلة لكل لاعب حسب نقطة رميه (1–12) ودولة كل فريق. الفرق: 1-2، 3-4، 5-6، 7-8، 9-10، 11-12، واللاعبة على اليسار (الرقم الفردي).",
  pasteph:"أو الصق القائمة هنا، اسم في كل سطر بترتيب نقاط الرمي 1 إلى 12:\nMORENO ESP\nFARID EGY\n…",fill:"تعبئة من القائمة",clearn:"مسح الأسماء",famph:"اسم العائلة",nocph:"الدولة",
@@ -428,7 +437,7 @@ ar:{eyebrow:"تأهيل الفرق المختلطة · 30 طلقة لكل لاع
  gateQ:"قبل أن تكمل: ما الذي يحدث بعد ذلك؟",right:"صحيح.",wrong:"ليس هذا. الصحيح:",go:"تابع",
  scenNote:{none:"نتائج عشوائية بدون تعادل على المركز الرابع.",tie:"في هذا السيناريو تعادل على المركز الرابع يُفض بالقاعدة 6.15.5.",irr:"حالات في هذا القطار: "},
  caseTag:"اختبر قرارك",caseNo:"الحالة",cprev:"→ السابقة",cnext:"التالية ←",crestart:"ابدأ من جديد",clisten:"🔊 اسمع الحالة",cscore:"إجاباتك الصحيحة:",notq:"ليست الإجابة الصحيحة.",
- src:"المصدر: دليل تأهيل الفرق المختلطة 10م (إنجليزي/عربي) إعداد الحكم الدولي طارق شرارة، وكتاب قواعد ISSF رقم A-678 V3 (إصدار 2025، الطبعة الثالثة 10/2026، سارية من 19 أكتوبر 2026، تصحيح الترجمة 15/11/2026): 6.18 و6.11 و6.15. النتائج افتراضية لقطار من ستة فرق. في المسدس تُحسب العشرات الداخلية (X) تقريبياً. التوقيت: يبدأ الإعداد والاختبار (15 دقيقة) عند −15:30 لينتهي قبل البداية بحوالي 30 ثانية (6.18.2.4 a)."},
+ src:"المصدر: دليل تأهيل الفرق المختلطة 10م (إنجليزي/عربي) إعداد الحكم الدولي طارق شرارة، وكتاب قواعد ISSF رقم A-678 V3 (إصدار 2025، الطبعة الثالثة 10/2026، سارية من 19 أكتوبر 2026، تصحيح الترجمة 15/11/2026): 6.18 و6.11 و6.15. النتائج افتراضية لقطار من ستة فرق. في المسدس تُحسب العشرات الداخلية (X) تقريبياً. التوقيت حسب دليل تدريب ISSF لضباط الميدان والحكام: النداء إلى الخط قبل وقت البداية بـ 25 دقيقة، ثم 10 دقائق تجهيز، ثم 15 دقيقة إعداد واختبار، ثم حوالي 30 ثانية لإعادة ضبط الأهداف قبل MATCH FIRING … START (6.18.2.3, 6.18.2.4)."},
 en:{eyebrow:"Mixed Team Qualification · 30 shots per athlete in 40 minutes · top 4 teams to the Final",h1:{r:"10m Air Rifle Mixed Team Qualification Simulator",p:"10m Air Pistol Mixed Team Qualification Simulator"},ev:["Air Rifle","Air Pistol"],
  lead:"Follow a Mixed Team qualification relay step by step: six teams (a woman on the left and a man on the right from the same nation) on firing points 1–12, the call to the line, preparation and sighting, 30 shots each athlete fires independently in 40 minutes, then the team ranking by the members' total, tie-breaking and the top four teams to the Final.",
  snd1:"🔊 Sound: on",snd0:"🔇 Sound: off",fs:"⛶ Full screen",fsx:"⛶ Exit full screen",anncap:"Note",
@@ -438,7 +447,7 @@ en:{eyebrow:"Mixed Team Qualification · 30 shots per athlete in 40 minutes · t
  step:"Step",of:"of",cmdcap:"CRO commands and timing",nocmd:"No command in this step",train:"⏱ Train as CRO in real time from here",
  sayAt:"At zero, say:",sayNow:"Say now",wait:"Wait",pause:"Pause",resume:"Resume",nextStage:"Next stage",close:"Close",auto:"Continue automatically",beep:"Sound cue",
  prev:"← Back",next:"Next →",play:"▶ Play",stop:"■ Stop",speed:"Speed",quizme:"Quiz me before each step",
- voiceOn:"🔊 Play narration",voiceOff:"🔇 Stop narration",vmode:["Explanation and commands","Commands only"],vrate:["Normal speed","Slow","Fast"],novoice:"Device default voice",
+ voiceOn:"🔊 Play narration",voiceOff:"🔇 Stop narration",vmode:["Explanation and commands","Commands only"],vrate:["Normal speed","Slow","Fast"],novoice:"Device default voice",vEnL:"English voice (commands)",vArL:"Arabic voice (narration)",
  scen:["New random results…","Tie for 4th place (Rule 6.15.5)","Irregularity: shot before preparation START","Irregularity: air released before preparation (yellow, then green)","Irregularity: shot after END OF PREPARATION … STOP","Irregularity: sighting shot after MATCH START","Irregularity: air released after start, no hit","Irregularity: crossfire onto another athlete's target","Irregularity: 31 shots by an athlete","Irregularity: shot after STOP","Irregularity: two shots not fired in time","Late arrival","Interruption over 5 minutes, athlete moved","Gun loaded with more than one pellet","Gun malfunction","All cases in one relay"],fromStart:"From the start",
  usenames:"Use athletes' names",nameshelp:"Enter each athlete's family name by firing point (1–12) and each team's country. Teams: 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, with the woman on the left (odd number).",
  pasteph:"Or paste the list here, one name per line for firing points 1 to 12:\nMORENO ESP\nFARID EGY\n…",fill:"Fill from list",clearn:"Clear names",famph:"Family name",nocph:"NOC",
@@ -450,7 +459,7 @@ en:{eyebrow:"Mixed Team Qualification · 30 shots per athlete in 40 minutes · t
  gateQ:"Before you continue: what happens next?",right:"Correct.",wrong:"Not this one. Correct answer:",go:"Continue",
  scenNote:{none:"Random results with no tie for 4th place.",tie:"This scenario has a tie for 4th place broken by Rule 6.15.5.",irr:"Cases in this relay: "},
  caseTag:"Test your call",caseNo:"Case",cprev:"← Previous",cnext:"Next →",crestart:"Start again",clisten:"🔊 Read the case",cscore:"Correct answers:",notq:"Not quite.",
- src:"Source: 10m Mixed Team Qualification Manual (English/Arabic) by International Judge Tarek Sharara, and ISSF Rule book A-678 V3 (Edition 2025, third print 10/2026, effective 19 October 2026; Arabic translation corrected 15.11.2026): 6.18, 6.11 and 6.15. Results are hypothetical for a six-team relay. In pistol, inner tens (X) are approximated. Timing: the 15-minute Preparation and Sighting Time starts at −15:30 so that it ends about 30 seconds before the start (6.18.2.4 a)."}
+ src:"Source: 10m Mixed Team Qualification Manual (English/Arabic) by International Judge Tarek Sharara, and ISSF Rule book A-678 V3 (Edition 2025, third print 10/2026, effective 19 October 2026; Arabic translation corrected 15.11.2026): 6.18, 6.11 and 6.15. Results are hypothetical for a six-team relay. In pistol, inner tens (X) are approximated. Timing as in the ISSF Training Manual for Range Officials and Judges: call to the line 25 minutes before the start time, 10 minutes set-up, 15 minutes Preparation and Sighting Time, then about 30 seconds to reset the targets before MATCH FIRING … START (6.18.2.3, 6.18.2.4)."}
 };
 const t=()=>T[lang];
 
@@ -517,12 +526,12 @@ function simulate(plan,names,quick){
   const G=GUN();
 
   /* ---- before the match ---- */
-  {const stg=[{lbl:{ar:"النداء إلى الخط",en:"Call to the line"},secs:5,say:"ATHLETES TO THE LINE",at:"−25:00",hint:{ar:"قبل البداية المعلنة بخمس وعشرين دقيقة على الأقل.",en:"At least 25 minutes before the published start."}}];
+  {const stg=[{lbl:{ar:"النداء إلى الخط",en:"Call to the line"},secs:5,say:"ATHLETES TO THE LINE",at:{ar:"قبل وقت البداية بـ 25 دقيقة",en:"25 minutes before the start time"},hint:{ar:"قبل وقت البداية بـ 25 دقيقة. يبدأ رئيس ضباط الميدان ساعة الإيقاف.",en:"25 minutes before the start time. The CRO starts the stopwatch."}}];
    push({ph:0,tag:{ar:"قبل المباراة",en:"Before the match"},title:{ar:"النداء إلى الخط: 10 دقائق للتجهيز",en:"Call to the line: 10 minutes to set up"},
     desc:{ar:`لا يجوز وضع الأسلحة والمعدات على نقاط الرمي قبل نداء رئيس ضباط الميدان. بعد ATHLETES TO THE LINE يُمنح اللاعبون 10 دقائق لتجهيز معداتهم، ويجوز لهم تناول ${G.ar}، والرمي الجاف (ويمكن إزالة أعلام الأمان لذلك)، وتمارين الحمل والتصويب قبل بدء زمن الإعداد والاختبار. يرمي عضوا كل فريق متجاورين واللاعبة على اليسار، ونقاط الرمي بالقرعة الحاسوبية، ولا توضع فرق الدولة الواحدة متجاورة. لا يجوز إخراج السلاح من الحقيبة قبل النداء.`,
           en:`Guns and equipment may not be placed on the firing points before the CRO calls the athletes to the line. After ATHLETES TO THE LINE athletes have 10 minutes to set up; they may handle their ${G.en}s, dry fire (safety flags may be removed for that) and do holding and aiming exercises before the Preparation and Sighting Time. Team members shoot side by side with the woman on the left; firing points are drawn by computer and teams from the same nation are not placed next to each other. Guns may not be unboxed before the call.`},
     ref:"6.18.2.2 · 6.18.2.3",pos:pm(()=>"fp"),equip:true,walk:true,stages:stg,cmds:cmdsFrom(stg)});}
-  {const stg=[{lbl:{ar:"فحوصات ما قبل المباراة",en:"Pre-competition checks"},secs:570,say:null,hint:{ar:"لجنة الحكام وضباط الميدان خلال الدقائق العشر قبل الإعداد والاختبار.",en:"Jury and Range Officers, during the 10 minutes before preparation and sighting."}}];
+  {const stg=[{lbl:{ar:"فحوصات ما قبل المباراة",en:"Pre-competition checks"},secs:595,say:null,hint:{ar:"لجنة الحكام وضباط الميدان خلال الدقائق العشر قبل الإعداد والاختبار.",en:"Jury and Range Officers, during the 10 minutes before preparation and sighting."}}];
    push({ph:0,tag:{ar:"قبل المباراة",en:"Before the match"},title:{ar:"فحوصات لجنة الحكام وضباط الميدان",en:"Jury and Range Officer checks"},
     desc:{ar:"يجب أن تكتمل فحوصات ما قبل المباراة خلال الدقائق العشر قبل بدء زمن الإعداد والاختبار، ويجب أن تكون أهداف الاختبار مرئية قبل بدء الإعداد والاختبار بعشر دقائق على الأقل.",en:"Pre-competition checks must be completed during the 10 minutes before the Preparation and Sighting Time; sighting targets must be visible at least 10 minutes before it starts."},
     ref:"6.18.2.4 b",pos:pm(()=>"fp"),equip:true,stages:stg,cmds:[]});}
@@ -537,18 +546,18 @@ function simulate(plan,names,quick){
       {ar:`أطلق {${x.p}} طلقة قبل أمر البدء. لا علاقة للأمر بالسلامة (6.2.3.5)، لذلك تُسجَّل أول طلقة مباراة له صفراً. إذا تعلق الأمر بالسلامة يجوز استبعاده.`,en:`{${x.p}} fires a shot before the START command. Safety is not involved (6.2.3.5), so the first competition shot is recorded as a miss (0). If safety were involved he may be disqualified.`},"6.18.2.4 d"); });
   has("late").forEach(x=>{ A[x.p].status="entry"; });
   const sightShooters=POS.filter(p=>A[p].status!=="entry");
-  {const stg=[{lbl:{ar:"قبل البدء",en:"Before start"},secs:5,say:"PREPARATION AND SIGHTING TIME … START",at:"−15:30",hint:{ar:"15 دقيقة إعداد واختبار تنتهي قبل البداية بحوالي 30 ثانية.",en:"15 minutes of preparation and sighting ending about 30 seconds before the start."}},
-     {lbl:{ar:"الإعداد والاختبار",en:"Preparation & sighting"},secs:870,say:"30 SECONDS",at:"−01:00",hint:{ar:"بعد 14:30 يعلن رئيس ضباط الميدان 30 SECONDS.",en:"After 14:30 the Chief Range Officer announces 30 SECONDS."}},
-     {lbl:{ar:"آخر 30 ثانية",en:"Last 30 seconds"},secs:30,say:"END OF PREPARATION AND SIGHTING … STOP",at:"−00:30",hint:{ar:"ثم وقفة حوالي 30 ثانية لإعادة ضبط الأهداف على MATCH.",en:"Then a pause of about 30 seconds while targets are reset to MATCH."}}];
+  {const stg=[{lbl:{ar:"قبل البدء",en:"Before start"},secs:5,say:"PREPARATION AND SIGHTING TIME … START",at:{ar:"بعد 10 دقائق من النداء إلى الخط",en:"10 minutes after the call to the line"},hint:{ar:"بعد 10 دقائق من النداء إلى الخط. يُعاد ضبط ساعة الإيقاف، و15 دقيقة إعداد واختبار.",en:"10 minutes after the call to the line. The stopwatch is reset; 15 minutes of preparation and sighting."}},
+     {lbl:{ar:"الإعداد والاختبار",en:"Preparation & sighting"},secs:870,say:"30 SECONDS",at:{ar:"بعد 14 دقيقة و30 ثانية من بدء الإعداد والاختبار",en:"14 min 30 s after preparation and sighting starts"},hint:{ar:"بعد 14 دقيقة و30 ثانية يعلن رئيس ضباط الميدان 30 SECONDS.",en:"After 14 min 30 s the Chief Range Officer announces 30 SECONDS."}},
+     {lbl:{ar:"آخر 30 ثانية",en:"Last 30 seconds"},secs:30,say:"END OF PREPARATION AND SIGHTING … STOP",at:{ar:"بعد 15 دقيقة من بدء الإعداد والاختبار",en:"15 minutes after preparation and sighting starts"},hint:{ar:"ثم وقفة حوالي 30 ثانية لإعادة ضبط الأهداف على MATCH.",en:"Then a pause of about 30 seconds while targets are reset to MATCH."}}];
    sightShooters.forEach(p=>{A[p].last=plan.sight[p].slice(); A[p].lastKind="sight";});
    push({ph:0,tag:{ar:"الإعداد والاختبار",en:"Preparation & sighting"},title:{ar:"15 دقيقة إعداد واختبار",en:"15 minutes preparation and sighting"},
-    desc:{ar:"يبدأ زمن الإعداد والاختبار بالأمر PREPARATION AND SIGHTING TIME … START، ولا يجوز إطلاق أي طلقة قبله. يُطلق اللاعبون عدداً غير محدود من طلقات الاختبار. بعد 14 دقيقة و30 ثانية: 30 SECONDS، وفي النهاية: END OF PREPARATION AND SIGHTING … STOP.",en:"The Preparation and Sighting Time begins with PREPARATION AND SIGHTING TIME … START; no shot may be fired before it. Athletes fire unlimited sighting shots. After 14:30: 30 SECONDS; at the end: END OF PREPARATION AND SIGHTING … STOP."},
+    desc:{ar:"يبدأ زمن الإعداد والاختبار بالأمر PREPARATION AND SIGHTING TIME … START، ولا يجوز إطلاق أي طلقة قبله. يُطلق اللاعبون عدداً غير محدود من طلقات الاختبار. بعد 14 دقيقة و30 ثانية: 30 SECONDS، وفي النهاية: END OF PREPARATION AND SIGHTING … STOP.",en:"The Preparation and Sighting Time begins with PREPARATION AND SIGHTING TIME … START; no shot may be fired before it. Athletes fire unlimited sighting shots. After 14 min 30 s: 30 SECONDS; at the end: END OF PREPARATION AND SIGHTING … STOP."},
     ref:"6.18.2.4 c, e, f",pos:pm(p=>A[p].status==="entry"?"entry":"fp"),fire:{shooters:sightShooters,vals:Object.fromEntries(sightShooters.map(p=>[p,plan.sight[p].slice()])),kind:"sight",dur:900,base:0},stages:stg,cmds:cmdsFrom(stg)});}
   POS.forEach(p=>{A[p].last=null; A[p].lastKind=null;});
   has("afterPrep").forEach(x=>{ irrNotes.push({ar:`طلقة بعد STOP (${x.p})`,en:`shot after preparation STOP (${x.p})`});
     irrStep(0,x.p,"#E5A23A",{ar:`مخالفة: طلقة بعد END OF PREPARATION AND SIGHTING … STOP (${x.p})`,en:`Irregularity: shot after END OF PREPARATION AND SIGHTING … STOP (${x.p})`},
       {ar:`أطلق {${x.p}} طلقة بعد أمر نهاية الإعداد وقبل MATCH FIRING … START. لا تُحتسب طلقة مباراة، ويُخصم نقطتان (2) من أول طلقة مباراة له، فتنقص من مجموع الفريق.`,en:`{${x.p}} fires after END OF PREPARATION AND SIGHTING … STOP and before MATCH FIRING … START. It is not counted as a match shot and a two (2) point penalty is applied to his first competition shot, reducing the team total.`},"6.18.2.4 g"); });
-  {const stg=[{lbl:{ar:"إعادة ضبط الأهداف",en:"Targets reset"},secs:30,say:"MATCH FIRING … START",at:"00:00",hint:{ar:"عند إعادة ضبط جميع الأهداف للمباراة.",en:"When all targets are reset for MATCH firing."}}];
+  {const stg=[{lbl:{ar:"إعادة ضبط الأهداف",en:"Targets reset"},secs:30,say:"MATCH FIRING … START",at:{ar:"بعد حوالي 30 ثانية لإعادة ضبط الأهداف",en:"about 30 seconds later, targets reset"},hint:{ar:"بعد حوالي 30 ثانية لإعادة ضبط جميع الأهداف للمباراة. يُعاد ضبط ساعة الإيقاف: يبدأ حساب زمن المباراة من الصفر.",en:"About 30 seconds later, when all targets are reset for MATCH firing. The stopwatch is reset: match time is counted from zero."}}];
    push({ph:1,tag:{ar:"بداية المباراة",en:"Match start"},title:{ar:"MATCH FIRING … START",en:"MATCH FIRING … START"},
     desc:{ar:"بعد إعادة ضبط جميع الأهداف يُصدر رئيس ضباط الميدان MATCH FIRING … START. يرمي كل عضو 30 طلقة مستقلاً عن زميله في 40 دقيقة (60 طلقة للفريق). كل طلقة بعد البدء طلقة مباراة، والرمي الجاف مسموح. يُسمح بالتوجيه غير اللفظي فقط.",en:"Once all targets are reset the CRO commands MATCH FIRING … START. Each member fires 30 shots independently of the partner in 40 minutes (60 per team). Every shot after START is a match shot; dry firing is allowed. Only non-verbal coaching is allowed."},
     ref:"6.18.2.5 · 6.11.1.2 · 6.18.1.7 a",pos:pm(p=>A[p].status==="entry"?"entry":"fp"),stages:stg,cmds:cmdsFrom(stg)});}
@@ -556,8 +565,8 @@ function simulate(plan,names,quick){
     irrStep(1,p,"#3E8FD8",{ar:`وصول متأخر: لا وقت إضافي (${p})`,en:`Late arrival: no extra time (${p})`},
       {ar:`وصل لاعب النقطة {${p}} بعد انتهاء زمن الإعداد والاختبار. يجوز له المشاركة دون أي وقت إضافي، ولا يُمنح وقت إضافي للاختبار لكن يُسمح له برمي طلقات اختبار ضمن وقته. إذا ثبت أن التأخر لظروف خارجة عن إرادته تمنحه لجنة الحكام وقتاً إضافياً إذا لم يؤخر النهائي، وتحدد متى وعلى أي نقطة يبدأ.`,en:`The athlete on {${p}} arrives after the Preparation and Sighting Time. He may participate without any extra time; no extra sighting time, but sighting shots are allowed within his time. If the late arrival was beyond his control, the Jury must grant extra time if it does not delay the Final, and decide when and where he starts.`},"6.11.4"); });
 
-  /* ---- match: six 10-shot series ---- */
-  const CLOCK=["13:20","26:40"];
+  /* ---- match: all shots fired continuously within the match time (not series by series) ---- */
+  const MV=Object.fromEntries(POS.map(p=>[p,[]])), LATER=[];
   for(let n=1;n<=3;n++){
     const k0=(n-1)*10+1, vals={};
     POS.forEach(p=>{ const v=[]; for(let j=0;j<10;j++){ const k=k0+j; let r=plan.raw[p][k], sc=score(r);
@@ -568,21 +577,13 @@ function simulate(plan,names,quick){
         if(n===3&&j===9&&has("afterStop").some(x=>x.p===p)){ sc=0; r=0; }
         A[p].shots[k]=sc; A[p].x[k]=r?isX(r)&&EV==="p"&&sc===100:false; v.push(sc); }
       if(n===3&&has("extra").some(x=>x.p===p)) v.push(score(plan.raw[p][31]));
-      vals[p]=v; A[p].last=v.slice(0,10).map((x,j)=>eff(p,k0+j)); A[p].lastKind="series"; });
+      vals[p]=v; MV[p].push(...v); A[p].last=v.slice(0,10).map((x,j)=>eff(p,k0+j)); A[p].lastKind="series"; });
     if(n===1){ has("early").concat(has("afterPrep")).forEach(()=>{}); has("afterPrep").forEach(x=>{ A[x.p].pen[1]=(A[x.p].pen[1]||0)-20; }); has("air").forEach(x=>{ const k=lowestS1(x.p); A[x.p].pen[k]=(A[x.p].pen[k]||0)-20; }); POS.forEach(p=>A[p].last=A[p].last.map((_,j)=>eff(p,1+j))); }
-    const stg=n<3?[{lbl:{ar:`المجموعة ${n} (تقريبي)`,en:`Series ${n} (indicative)`},secs:800,say:null,at:CLOCK[n-1],hint:{ar:"لا أوامر. كل لاعب يرمي بسرعته.",en:"No commands. Each athlete fires at their own pace."}}]
-      :[{lbl:{ar:"المجموعة 3",en:"Series 3"},secs:200,say:"10 MINUTES",at:"30:00",hint:{ar:"إعلان الوقت المتبقي عبر مكبر الصوت.",en:"Time remaining announced by loudspeaker."}},
-        {lbl:{ar:"آخر 10 دقائق",en:"Last 10 minutes"},secs:300,say:"5 MINUTES",at:"35:00",hint:{ar:"قبل نهاية المباراة بخمس دقائق.",en:"5 minutes before the end."}},
-        {lbl:{ar:"آخر 5 دقائق",en:"Last 5 minutes"},secs:300,say:"STOP",at:"40:00",hint:{ar:"عند انقضاء 40 دقيقة.",en:"When the 40 minutes are over."}}];
-    push({ph:1,tag:{ar:"المجموعة "+n,en:"Series "+n},title:{ar:`المجموعة ${n}: الطلقات ${k0}–${k0+9}`,en:`Series ${n}: shots ${k0}–${k0+9}`},
-      desc:n<3?{ar:`يرمي كل لاعب بسرعته الخاصة؛ عرض المجموعة ${n} يُمثل الحالة عند حوالي ${CLOCK[n-1]} من زمن المباراة (40 دقيقة). ${EV==="r"?"الدرجات بالكسور العشرية (أقصى 10.9).":"الدرجات بالدائرة الكاملة (أقصى 10)."}`,en:`Each athlete fires at their own pace; series ${n} shows the state at about ${CLOCK[n-1]} of match time. ${EV==="r"?"Decimal scoring (max 10.9).":"Full ring scoring (max 10)."}`}
-        :{ar:"يعلن رئيس ضباط الميدان الوقت المتبقي عند 10 دقائق و5 دقائق قبل نهاية زمن المباراة، ثم STOP عند 40:00. أي طلقة لم تُطلق خلال زمن المباراة تُحتسب صفراً على الهدف الأخير، وأي طلقة بعد STOP تُحتسب صفراً.",en:"The CRO announces the time remaining at 10 and 5 minutes before the end, then STOP at 40:00. Shots not fired within the match time are misses on the last target; shots after STOP are misses."},
-      ref:n<3?"6.18.2.5 · 6.11.1.2":"6.11.1.2 e, f · 6.11.1.3",pos:pm(()=>"fp"),fire:{shooters:POS.slice(),vals,kind:"series",cnt:10,dur:800,base:k0},stages:stg,cmds:cmdsFrom(stg)});
-    IRRS.filter(x=>x.s===n).forEach(x=>{ const p=x.p;
+    IRRS.filter(x=>x.s===n).forEach(x=>LATER.push(()=>{ const p=x.p;
       if(x.t==="sighter"){ irrNotes.push({ar:`طلقة اختبار بعد البدء (${p})`,en:`sighter after START (${p})`});
-        irrStep(1,p,"#E5A23A",{ar:`طلقة اختبار بعد بدء المباراة (${p})`,en:`Sighting shot after MATCH START (${p})`},{ar:`حوّل {${p}} هدفه إلى الاختبار في المجموعة ${n} وأطلق طلقة اختبار. بعد بدء المباراة لا يُسمح بطلقات اختبار (إلا بإذن لجنة الحكام وفق القواعد)، وأي طلقة اختبار مخالفة تُسجَّل صفراً في المسابقة.`,en:`{${p}} switches to sighting in series ${n} and fires a sighter. After MATCH START no further sighters are allowed (unless the Jury permits under these Rules); any such sighter is scored as a miss in the competition.`},"6.11.1.2 c, d"); }
+        irrStep(1,p,"#E5A23A",{ar:`طلقة اختبار بعد بدء المباراة (${p})`,en:`Sighting shot after MATCH START (${p})`},{ar:`حوّل {${p}} هدفه إلى الاختبار أثناء المباراة (الطلقات ${k0}–${k0+9}) وأطلق طلقة اختبار. بعد بدء المباراة لا يُسمح بطلقات اختبار (إلا بإذن لجنة الحكام وفق القواعد)، وأي طلقة اختبار مخالفة تُسجَّل صفراً في المسابقة.`,en:`{${p}} switches to sighting during the match (shots ${k0}–${k0+9}) and fires a sighter. After MATCH START no further sighters are allowed (unless the Jury permits under these Rules); any such sighter is scored as a miss in the competition.`},"6.11.1.2 c, d"); }
       if(x.t==="airMatch"){ irrNotes.push({ar:`إطلاق الهواء دون إصابة (${p})`,en:`air released, no hit (${p})`});
-        irrStep(1,p,"#E5A23A",{ar:`إطلاق الشحنة الدافعة دون إصابة (${p})`,en:`Propelling charge released without a hit (${p})`},{ar:`في المجموعة ${n} أطلق {${p}} الشحنة الدافعة دون كُرية ودون إصابة على الهدف. بعد بدء المباراة تُسجَّل صفراً. الرمي الجاف بدون إطلاق الشحنة مسموح (إلا في النهائيات).`,en:`In series ${n} {${p}} releases the propelling charge with no pellet and no hit. After MATCH firing starts this is scored as a miss. Dry firing without releasing the charge is permitted (except in Finals).`},"6.11.2.2"); }
+        irrStep(1,p,"#E5A23A",{ar:`إطلاق الشحنة الدافعة دون إصابة (${p})`,en:`Propelling charge released without a hit (${p})`},{ar:`أثناء المباراة (الطلقات ${k0}–${k0+9}) أطلق {${p}} الشحنة الدافعة دون كُرية ودون إصابة على الهدف. بعد بدء المباراة تُسجَّل صفراً. الرمي الجاف بدون إطلاق الشحنة مسموح (إلا في النهائيات).`,en:`During the match (shots ${k0}–${k0+9}) {${p}} releases the propelling charge with no pellet and no hit. After MATCH firing starts this is scored as a miss. Dry firing without releasing the charge is permitted (except in Finals).`},"6.11.2.2"); }
       if(x.t==="cross"){ irrNotes.push({ar:`طلقة متقاطعة (${p} → ${x.q})`,en:`crossfire (${p} → ${x.q})`});
         irrStep(1,p,"#D93B36",{ar:`طلقة متقاطعة: ${p} على هدف ${x.q}`,en:`Crossfire: ${p} onto ${x.q}'s target`},{ar:`أطلق {${p}} طلقة مباراة على هدف مباراة اللاعب {${x.q}}. الطلقة المتقاطعة للمباراة تُسجَّل صفراً للاعب {${p}} فتنقص من مجموع فريقه (دون خصم إضافي؛ خصم النقطتين يكون لطلقة الاختبار المتقاطعة على هدف مباراة لاعب آخر). على هدف {${x.q}} تُلغى الإصابة الزائدة المؤكدة ولا عقوبة عليه؛ وإذا تعذر تحديد أي الطلقات له تُحتسب له أعلى طلقة غير محددة.`,en:`{${p}} fires a MATCH shot onto the MATCH target of {${x.q}}. The crossfired competition shot is scored as a miss for {${p}}, reducing his team total (no further deduction; the 2-point deduction is for a sighting shot crossfired onto another athlete's MATCH target). On {${x.q}}'s target the confirmed extra hit is annulled with no penalty; if it is impossible to tell which shot is his, he is credited with the highest undetermined shot.`},"6.11.6.1, 6.11.6.4"); }
       if(x.t==="double"){ irrNotes.push({ar:`تعمير بأكثر من رشة (${p})`,en:`double-loaded (${p})`});
@@ -590,9 +591,18 @@ function simulate(plan,names,quick){
       if(x.t==="malf"){ irrNotes.push({ar:`عطل في السلاح (${p})`,en:`gun malfunction (${p})`});
         irrStep(1,p,"#E5A23A",{ar:`عطل في ${G.ar} (${p})`,en:`${G.en} malfunction (${p})`},{ar:`حدث عطل في ${G.ar} مع {${p}}. تُطبّق القاعدة 6.13، ولا يُمنح وقت إضافي لعطل المعدات، لكن يجوز للجنة الحكام السماح بطلقات اختبار إضافية عند عودته بعد الإصلاح، على أن تُطلق جميع الطلقات في الزمن الأصلي. لتغيير أو تعبئة أسطوانة الغاز أو الهواء يغادر نقطة الرمي بإذن ضابط الميدان ودون وقت إضافي.`,en:`{${p}}'s ${G.en} malfunctions. Rule 6.13 applies; no extra time for an equipment malfunction, but the Jury may allow extra sighters when he returns after the repair, with all shots fired within the original time. To change or fill a gas or air cylinder he leaves the firing point with a Range Officer's permission, with no extra time.`},"6.11.1.1 l · 6.11.2.3"); }
       if(x.t==="interrupt"){ A[p].ext=1; A[p].tslot="R2"; irrNotes.push({ar:`انقطاع ونقل (${p})`,en:`interruption and move (${p})`});
-        irrStep(1,p,"#3E8FD8",{ar:`انقطاع أكثر من 5 دقائق: نقل إلى هدف احتياطي (${p})`,en:`Interruption over 5 minutes: moved to a reserve target (${p})`},{ar:`تعطل هدف {${p}} في المجموعة ${n} وتوقف 8 دقائق دون خطأ منه، ونُقل إلى نقطة الرمي الاحتياطية. يُمنح طلقات اختبار غير محدودة في بداية وقته المتبقي، مع الوقت المفقود، و5 دقائق إضافية. يُسجَّل الشرح الكامل وسبب التمديد في نموذج وقائع الميدان (IR). (أكثر من 3 دقائق فقط: وقت إضافي يعادل الوقت المفقود، أو الوقت المتبقي + دقيقة في آخر 5 دقائق).`,en:`{${p}}'s target fails in series ${n} and he stops for 8 minutes through no fault of his own; he is moved to a reserve firing point. He gets unlimited sighters at the start of his remaining time, the time lost, plus 5 more minutes. The full explanation and the reason for the extension go on a Range Incident Report. (Over 3 minutes only: extra time equal to the time lost, or remaining time + 1 minute in the last 5 minutes.)`},"6.11.3.1, 6.11.3.2"); }
-    });
+        irrStep(1,p,"#3E8FD8",{ar:`انقطاع أكثر من 5 دقائق: نقل إلى هدف احتياطي (${p})`,en:`Interruption over 5 minutes: moved to a reserve target (${p})`},{ar:`تعطل هدف {${p}} أثناء المباراة (الطلقات ${k0}–${k0+9}) وتوقف 8 دقائق دون خطأ منه، ونُقل إلى نقطة الرمي الاحتياطية. يُمنح طلقات اختبار غير محدودة في بداية وقته المتبقي، مع الوقت المفقود، و5 دقائق إضافية. يُسجَّل الشرح الكامل وسبب التمديد في نموذج وقائع الميدان (IR). (أكثر من 3 دقائق فقط: وقت إضافي يعادل الوقت المفقود، أو الوقت المتبقي + دقيقة في آخر 5 دقائق).`,en:`{${p}}'s target fails during the match (shots ${k0}–${k0+9}) and he stops for 8 minutes through no fault of his own; he is moved to a reserve firing point. He gets unlimited sighters at the start of his remaining time, the time lost, plus 5 more minutes. The full explanation and the reason for the extension go on a Range Incident Report. (Over 3 minutes only: extra time equal to the time lost, or remaining time + 1 minute in the last 5 minutes.)`},"6.11.3.1, 6.11.3.2"); }
+    }));
   }
+
+  {const stg=[{lbl:{ar:"رمي المباراة",en:"MATCH firing"},secs:1800,say:"10 MINUTES",at:{ar:"قبل نهاية زمن المباراة بـ 10 دقائق",en:"10 minutes before the end of the match time"},hint:{ar:"بعد 30 دقيقة من MATCH FIRING … START. لا أوامر قبل ذلك؛ كل لاعب يرمي بسرعته.",en:"30 minutes after MATCH FIRING … START. No commands before that; each athlete fires at their own pace."}},
+     {lbl:{ar:"آخر 10 دقائق",en:"Last 10 minutes"},secs:300,say:"5 MINUTES",at:{ar:"قبل نهاية زمن المباراة بـ 5 دقائق",en:"5 minutes before the end of the match time"},hint:{ar:"بعد 5 دقائق: قبل نهاية المباراة بخمس دقائق.",en:"5 minutes later: 5 minutes before the end."}},
+     {lbl:{ar:"آخر 5 دقائق",en:"Last 5 minutes"},secs:300,say:"STOP",at:{ar:"بعد مرور 40 دقيقة من بدء زمن الرمي",en:"40 minutes after MATCH firing starts"},hint:{ar:"بعد 5 دقائق: عند انقضاء 40 دقيقة.",en:"5 minutes later: when the 40 minutes are over."}}];
+   push({ph:1,tag:{ar:"رمي المباراة",en:"MATCH firing"},title:{ar:"رمي المباراة: 30 طلقة في 40 دقيقة",en:"MATCH firing: 30 shots in 40 minutes"},
+    desc:{ar:`يرمي كل لاعب (مستقلاً عن زميله) طلقاته الثلاثين (30) بسرعته الخاصة طوال زمن المباراة (40 دقيقة)، وليس مجموعة بمجموعة؛ لا توجد أوامر بين الطلقات أو بين المجموعات. المجموعات من 10 طلقات في كارت النتائج لتسجيل الدرجات وفض التعادل فقط. يعلن رئيس ضباط الميدان الوقت المتبقي عند 10 دقائق و5 دقائق قبل النهاية، ثم STOP عند انتهاء زمن المباراة (بعد مرور 40 دقيقة من بدء زمن الرمي). أي طلقة لم تُطلق خلال زمن المباراة تُحتسب صفراً على الهدف الأخير، وأي طلقة بعد STOP تُحتسب صفراً. ${EV==="r"?"الدرجات بالكسور العشرية (أقصى 10.9).":"الدرجات بالدائرة الكاملة (أقصى 10)."}`,
+          en:`Each athlete (independently of the partner) fires all 30 shots at their own pace throughout the match time (40 minutes), not series by series; there are no commands between shots or series. The 10-shot series on the results card are only for scoring and tie-breaking. The CRO announces the time remaining at 10 and 5 minutes before the end, then STOP when the match time is over (40 minutes after MATCH firing starts). Shots not fired within the match time are misses on the last target; shots after STOP are misses. ${EV==="r"?"Decimal scoring (max 10.9).":"Full ring scoring (max 10)."}`},
+    ref:"6.18.2.5 · 6.11.1.2 · 6.11.1.3",pos:pm(()=>"fp"),fire:{shooters:POS.slice(),vals:MV,kind:"match",cnt:30,dur:2400,base:1},stages:stg,cmds:cmdsFrom(stg)});}
+  LATER.forEach(f=>f());
   has("extra").forEach(x=>{ const p=x.p, k=lowestS1(p); A[p].pen[k]=(A[p].pen[k]||0)-20; irrNotes.push({ar:`31 طلقة (${p})`,en:`31 shots (${p})`});
     irrStep(1,p,"#D93B36",{ar:`31 طلقة (${p})`,en:`31 shots (${p})`},{ar:`أطلق {${p}} 31 طلقة مباراة بدلاً من 30. تُلغى الطلقة الزائدة على الهدف الأخير (أو الأعلى قيمة إذا تعذر تحديدها)، ويُخصم نقطتان (2) عن كل طلقة زائدة من أقل طلقة قيمة في المجموعة الأولى (الطلقة ${k}).`,en:`{${p}} fires 31 MATCH shots instead of 30. The extra shot is annulled on the last target (or the highest value one if it cannot be identified), and 2 points per extra shot are deducted from the lowest value shot in the first series (shot ${k}).`},"6.11.5"); });
   has("afterStop").forEach(x=>{ irrNotes.push({ar:`طلقة بعد STOP (${x.p})`,en:`shot after STOP (${x.p})`});
@@ -600,7 +610,7 @@ function simulate(plan,names,quick){
   has("unfired").forEach(x=>{ irrNotes.push({ar:`طلقتان لم تُطلقا (${x.p})`,en:`two shots not fired (${x.p})`});
     irrStep(1,x.p,"#E5A23A",{ar:`طلقتان لم تُطلقا في الوقت (${x.p})`,en:`Two shots not fired in time (${x.p})`},{ar:`عند STOP كان {${x.p}} قد أطلق 28 طلقة فقط. الطلقتان اللتان لم تُطلقا خلال زمن المباراة تُحتسبان صفراً على الأهداف الأخيرة، ما لم يكن رئيس ضباط الميدان أو عضو لجنة الحكام قد أذن بوقت إضافي.`,en:`At STOP {${x.p}} has fired only 28 shots. The two shots not fired within the match time are scored as misses on the last targets, unless the CRO or a Jury Member authorised extra time.`},"6.11.1.2 f"); });
   if(IRRS.some(x=>x.t==="interrupt")){ const p=IRRS.find(x=>x.t==="interrupt").p;
-    const stg=[{lbl:{ar:"الوقت الإضافي للاعب المنقول",en:"Extra time for the moved athlete"},secs:780,say:"STOP",at:"53:00",hint:{ar:"8 دقائق مفقودة + 5 دقائق.",en:"8 minutes lost + 5 minutes."}}];
+    const stg=[{lbl:{ar:"الوقت الإضافي للاعب المنقول",en:"Extra time for the moved athlete"},secs:780,say:"STOP",at:{ar:"بعد الوقت المفقود + 5 دقائق",en:"after the time lost + 5 minutes"},hint:{ar:"8 دقائق مفقودة + 5 دقائق.",en:"8 minutes lost + 5 minutes."}}];
     push({ph:1,tag:{ar:"وقت إضافي",en:"Extra time"},title:{ar:`وقت إضافي: ${p} يكمل وحده`,en:`Extra time: ${p} finishes alone`},desc:{ar:`يكمل {${p}} على النقطة الاحتياطية في وقته الممدد (الوقت المفقود + 5 دقائق)، ثم يصدر له STOP.`,en:`{${p}} completes his shots on the reserve point in his extended time (time lost + 5 minutes), then STOP for him.`},ref:"6.11.3.2",pos:pm(()=>"fp"),flag:{p,color:"#3E8FD8"},stages:stg,cmds:cmdsFrom(stg)}); }
 
   /* ---- results ---- */
@@ -669,7 +679,10 @@ function drawField(){
   });
   TID.forEach(t=>{ const [a,b]=mates(t); const x1=X[a]-27, x2=X[b]+27;
     el("path",{d:`M${x1} 398 L${x1} 404 L${x2} 404 L${x2} 398`,fill:"none",stroke:TCOL[t],"stroke-width":2.5},s);
-    LBL["tm"+t]=el("text",{x:(X[a]+X[b])/2,y:417,"text-anchor":"middle","font-size":10,"font-weight":700,fill:"#fff"},s,""); });
+    LBL["tm"+t]=el("text",{x:(X[a]+X[b])/2,y:417,"text-anchor":"middle","font-size":10,"font-weight":700,fill:"#fff"},s,"");
+    /* woman on the LEFT point, man on the RIGHT point: one word under each point, so the order never depends on the text direction */
+    LBL["tw"+t]=el("text",{x:X[a],y:417,"text-anchor":"middle","font-size":10,"font-weight":700,fill:"#fff"},s,"");
+    LBL["tn"+t]=el("text",{x:X[b],y:417,"text-anchor":"middle","font-size":10,"font-weight":700,fill:"#fff"},s,""); });
   POS.forEach(p=>{
     const g=el("g",{class:"tok"},s);
     el("circle",{r:23,fill:"none",stroke:"#FFD84D","stroke-width":3,opacity:0,class:"ring"},g);
@@ -681,7 +694,8 @@ function drawField(){
 }
 function tokXY(p,zone,b){ if(zone==="entry") return [X[p],FPY+110]; return [X[b.tslot||p],FPY]; }
 /* each athlete fires at a slightly different moment */
-function fireAt(p,j,n){ const jit=(((p.charCodeAt(0)*7+j*13)%10)/10-.5)*.5; return Math.min(.97,Math.max(.03,(j+.5+jit)/n)); }
+function fireAt(p,j,n){ if(n>=25){ /* whole match: each athlete has his own pace */ const c=p.charCodeAt(0)*37+(p.charCodeAt(1)||0)*11, pace=.80+(c%17)/17*.17, jt=(((p.charCodeAt(0)*7+j*13)%10)/10-.5)*.3; return Math.min(.995,Math.max(.005,(j+.5+jt)/n*pace)); }
+  const jit=(((p.charCodeAt(0)*7+j*13)%10)/10-.5)*.5; return Math.min(.97,Math.max(.03,(j+.5+jit)/n)); }
 function impXY(x,v,seed){ const d=Math.min(30,Math.max(0,(109-v))*(EV==="r"?.9:.5)); const a=((seed*137.5)%360)*Math.PI/180; return [x+Math.cos(a)*d,74+Math.sin(a)*d]; }
 let anim=null;
 function fieldCmd(txt){ if(!CMDG) return; const narrow=($("field").getBoundingClientRect().width||1000)<600; const fs=narrow?30:22;
@@ -692,7 +706,7 @@ function fieldCmd(txt){ if(!CMDG) return; const narrow=($("field").getBoundingCl
 /* the command given at the end of the previous step (e.g. FOR THE NEXT COMPETITION SHOT … LOAD) */
 function prevCmd(i){ const p=STEPS[i-1]; return p&&p.cmds&&p.cmds.length?p.cmds[p.cmds.length-1].c:""; }
 /* firing window of a step: the stage(s) whose time is the 250 s / 50 s firing time (sighting: the whole 5 minutes) */
-function fireWin(st){ const sg=st.stages; if(st.fire.kind==="sight") return {a:0,b:sg.length-1}; let i=-1; sg.forEach((s,j)=>{ if(s.secs===st.fire.dur) i=j; }); if(i<0) return {a:0,b:sg.length-1}; return {a:i,b:i}; }
+function fireWin(st){ const sg=st.stages; if(st.fire.kind==="sight"||st.fire.kind==="match") return {a:0,b:sg.length-1}; let i=-1; sg.forEach((s,j)=>{ if(s.secs===st.fire.dur) i=j; }); if(i<0) return {a:0,b:sg.length-1}; return {a:i,b:i}; }
 function progAt(st,k,e){ const w=fireWin(st), sg=st.stages; if(k<w.a) return 0; if(k>w.b) return 1; let t=e; for(let j=w.a;j<k;j++) t+=sg[j].secs; return Math.min(1,t/st.fire.dur); }
 function landedN(st,prog){ let n=0; const f=st.fire; f.shooters.forEach(p=>{ const v=f.vals[p]||[]; v.forEach((x,j)=>{ if(x!=null&&prog>=fireAt(p,j,v.length)) n++; }); }); return n; }
 /* field at a moment inside a firing step: stage k, e seconds into it */
@@ -714,6 +728,9 @@ function liveView(){ const st=STEPS[I], pr=liveProg(); if(pr==null) return st;
     if(!f.shooters.includes(p)) return;
     const v=f.vals[p]||[]; const got=v.map((x,j)=>x!=null&&pr>=fireAt(p,j,v.length)?x:null); const sum=got.slice(0,cnt).reduce((a,x)=>a+(x||0),0), any=got.some(x=>x!=null);
     if(f.kind==="sight"){ res[p]=q; board[p]=Object.assign({},qb,{last:got,lastKind:"sight"}); return; }
+    if(f.kind==="match"){ const gv=got.slice(0,cnt); for(let n=0;n<3;n++){ const g=gv.slice(n*10,n*10+10).filter(x=>x!=null); res[p].s[n]=g.length?g.reduce((a,b)=>a+b,0):null; res[p].sp[n]=0; }
+      res[p].total=q.total+sum; res[p].x=q.x; const nl=gv.filter(x=>x!=null).length, cs=Math.min(2,Math.max(0,Math.floor((nl-1)/10)));
+      board[p].last=nl?gv.slice(cs*10,cs*10+10):null; board[p].lastKind="series"; board[p].total=res[p].total; board[p].x=q.x; }
     if(f.kind==="series"){ res[p].s[n0]=any?sum:null; res[p].sp[n0]=0; res[p].total=q.total+sum; res[p].x=q.x; board[p].last=got.slice(0,cnt); board[p].lastKind="series"; board[p].total=res[p].total; board[p].x=q.x; } });
   /* live team totals and ranking */
   const tb={}; TID.forEach(x=>{ const ms=mates(x); const o=Object.assign({},st.tb[x]); o.total=ms.reduce((a,p)=>a+res[p].total,0); o.x=ms.reduce((a,p)=>a+res[p].x,0);
@@ -726,7 +743,7 @@ function renderField(animate){
   const W=$("field").getBoundingClientRect().width||1000; const narrow=W<600; const k=narrow?Math.min(2,560/W*1.15):1.15;
   for(const key in LBL){const e=LBL[key]; if(!e.dataset.fs) e.dataset.fs=e.getAttribute("font-size"); e.setAttribute("font-size",(+e.dataset.fs*(key[0]==="v"?Math.min(k,1.45):k)).toFixed(1));}
   LBL.line.textContent=narrow?(lang==="ar"?"10م":"10 m"):tt.f.line; LBL.fl.textContent=narrow?"":tt.f.fl;
-  LBL.rR1.textContent=""; LBL.rR2.textContent=""; TID.forEach(t=>{ const [a,b]=mates(t).map(p=>POS.indexOf(p)); const noc=USE_NAMES?(ENTRIES[a].noc||ENTRIES[b].noc||"").toUpperCase():""; LBL["tm"+t].textContent=noc||(narrow?"":(lang==="ar"?"سيدة · رجل":"W · M")); });
+  LBL.rR1.textContent=""; LBL.rR2.textContent=""; TID.forEach(t=>{ const [a,b]=mates(t).map(p=>POS.indexOf(p)); const noc=USE_NAMES?(ENTRIES[a].noc||ENTRIES[b].noc||"").toUpperCase():""; const el2=LBL["tm"+t]; const show=!noc&&!narrow; el2.textContent=noc||""; LBL["tw"+t].textContent=show?(lang==="ar"?"سيدة":"W"):""; LBL["tn"+t].textContent=show?(lang==="ar"?"رجل":"M"):""; });
   POS.forEach(p=>{ const g=TOK[p]; g.querySelector(".disc").setAttribute("r",narrow?20:16); g.querySelector(".ring").setAttribute("r",narrow?25:22); const tx=g.querySelector(".num"); tx.setAttribute("font-size",narrow?20:15); tx.setAttribute("dy",narrow?7:5.5);
     const tn=g.querySelector(".tname"); const nmv=hasName(p)?NAMES[POS.indexOf(p)]:""; tn.textContent=nmv.length>10?nmv.slice(0,9)+"…":nmv; tn.setAttribute("font-size",narrow?17:11); tn.setAttribute("y",narrow?42:35); });
   const sh=st.fire?st.fire.shooters:[];
@@ -745,12 +762,14 @@ function renderField(animate){
       if(!vals) return;
       if(inFire && prog<1) TGT[ts].setAttribute("stroke","var(--accent)");
       const n=vals.length; let sum=0, any=false, lastV=null; const sight=kind==="sight";
-      vals.forEach((v,j)=>{ if(v==null) return; if(inFire && prog<fireAt(p,j,n)) return;
+      /* whole match: the target shows the shots of the athlete's current 10-shot series */
+      let g0=-1; if(kind==="match"){ let nl=0; vals.forEach((v,j)=>{ if(v!=null&&!(inFire&&prog<fireAt(p,j,n))) nl++; }); g0=Math.min(2,Math.max(0,Math.floor((nl-1)/10)))*10; }
+      vals.forEach((v,j)=>{ if(v==null) return; if(inFire && prog<fireAt(p,j,n)) return; if(g0>=0&&(j<g0||(j>=g0+10&&g0<20))) return;
         const [ix,iy]=impXY(x,v,(st.fire?st.fire.base:0)*11+j*7+p.charCodeAt(0));
         el("circle",{cx:ix.toFixed(1),cy:iy.toFixed(1),r:4.2,fill:sight?"#9aa7a6":(v===0?"var(--miss)":"var(--accent)"),stroke:"#fff","stroke-width":1.2},IMP[ts]);
-        if(j<(inFire?(st.fire.cnt||5):(kind==="series"?10:5))){ sum+=v; any=true; } lastV=v; });
+        if(g0>=0||j<(inFire?(st.fire.cnt||5):(kind==="series"?10:5))){ sum+=v; any=true; } lastV=v; });
       if(!any) return;
-      LBL["v"+ts].textContent=sight?"•":(kind==="series"?f1(sum):f1(lastV));
+      LBL["v"+ts].textContent=sight?"•":(kind==="series"||kind==="match"?f1(sum):f1(lastV));
     });
     $("timerbar").style.width=(prog*100)+"%";
   };
@@ -781,7 +800,7 @@ function render(animate){
   $("steptag").textContent=L(st.tag); $("steptitle").textContent=L(st.title);
   $("cmdcap").textContent=tt.cmdcap;
   const cl=$("cmdlist"); cl.innerHTML="";
-  if(st.cmds&&st.cmds.length) st.cmds.forEach(c=>{const d=document.createElement("div");d.className="cmdrow";d.innerHTML=`<span class="c">${esc(c.c)}</span><span class="at">${esc(c.at)}</span>`;cl.appendChild(d);});
+  if(st.cmds&&st.cmds.length) st.cmds.forEach(c=>{const d=document.createElement("div");d.className="cmdrow";d.innerHTML=`<span class="c">${esc(c.c)}</span><span class="at">${esc(L(c.at))}</span>`;cl.appendChild(d);});
   else cl.innerHTML=`<div class="cmdrow"><span class="c" style="font-family:var(--f-body);font-weight:500;opacity:.85">${esc(tt.nocmd)}</span></div>`;
   const ab=$("annbox"); ab.hidden=!st.ann; if(st.ann){ $("anncap").textContent=tt.anncap; $("anntext").textContent=st.ann; }
   $("stepdesc").innerHTML=chipify(L(st.desc)); $("stepref").textContent="ISSF "+st.ref;
@@ -792,7 +811,7 @@ function render(animate){
   [1,2,4,8,16].forEach(v=>$("sp"+v).setAttribute("aria-pressed",SPEED===v));
   fillSelect($("vmode"),tt.vmode); fillSelect($("vrate"),tt.vrate); fillSelect($("scen"),tt.scen,SCEN);
   $("bvoice").textContent=VOICE_ON?tt.voiceOff:tt.voiceOn; fillVoices();
-  $("bstart").textContent=tt.fromStart; $("kbdhint").innerHTML=tt.kbd; $("sndbtn").textContent=SOUND?tt.snd1:tt.snd0; $("sndbtn").setAttribute("aria-pressed",SOUND); $("bvoice").disabled=!synth; $("tbeep").disabled=!SOUND; $("clisten").disabled=!synth; $("fsbtn").textContent=document.fullscreenElement?tt.fsx:tt.fs;
+  $("bstart").textContent=tt.fromStart; $("kbdhint").innerHTML=tt.kbd; { const av=$("aivoice"); av.hidden=lang!=="ar"; av.innerHTML=lang==="ar"?"تمت ترجمة الصوت بالذكاء الاصطناعي.<br>ولهذا هناك أخطاء في نطق بعض الكلمات باللغة العربية.":""; } $("sndbtn").textContent=SOUND?tt.snd1:tt.snd0; $("sndbtn").setAttribute("aria-pressed",SOUND); $("bvoice").disabled=!synth; $("tbeep").disabled=!SOUND; $("clisten").disabled=!synth; $("fsbtn").textContent=document.fullscreenElement?tt.fsx:tt.fs;
   const PL={1:{ar:"الذهبية",en:"gold"},2:{ar:"الفضية",en:"silver"},3:{ar:"البرونزية",en:"bronze"}};
   $("scennote").textContent=(((!EVENTS.length&&!IRRN.length)?tt.scenNote.none:(EVENTS.length?tt.scenNote.tie:""))+(IRRN.length?" "+tt.scenNote.irr+IRRN.map(L).join(lang==="ar"?"، ":", ")+".":"")).trim();
   $("tautol").textContent=tt.auto; $("tbeepl").textContent=tt.beep; $("tnext").textContent=tt.nextStage; $("tclose").textContent=tt.close;
@@ -846,7 +865,7 @@ function nextStep(){ if(I>=STEPS.length-1){stopPlay();return false;}
   GATE_OK=false; go(I+1,true); return true; }
 function stopPlay(){ PLAYING=false; if(playT){clearTimeout(playT);playT=null;} $("bplay").textContent=t().play; }
 function schedPlay(ms){ clearTimeout(playT); playDue=performance.now()+ms; playT=setTimeout(playTick,ms); }
-function playTick(){ playT=null; if(anim||performance.now()-ANIM_DONE<1500/SPEED){ schedPlay(300); return; } if(!nextStep()){stopPlay();return} const st=STEPS[I]; schedPlay((st.fire?(st.fire.kind==="series"||st.fire.kind==="sight"?8600:5200):st.walk?5200:4200)/SPEED); }
+function playTick(){ playT=null; if(anim||performance.now()-ANIM_DONE<1500/SPEED){ schedPlay(300); return; } if(!nextStep()){stopPlay();return} const st=STEPS[I]; schedPlay((st.fire?(st.fire.kind==="match"?12000:st.fire.kind==="series"||st.fire.kind==="sight"?8600:5200):st.walk?5200:4200)/SPEED); }
 function play(){ if(PLAYING){stopPlay();return} PAUSED=false; updPause(); PLAYING=true; schedPlay(300); $("bplay").textContent=t().stop; }
 function updPause(){ const b=$("bpause"); if(!b) return; b.innerHTML=(PAUSED?"▶":"❚❚")+'<span class="plbl"> '+(PAUSED?t().resume:t().pause)+"</span>"; b.title=PAUSED?t().resume:t().pause; b.setAttribute("aria-label",b.title); b.setAttribute("aria-pressed",PAUSED); }
 function setPaused(v){ if(PAUSED===v) return; PAUSED=v;
@@ -947,23 +966,47 @@ let SOUND=false; try{ if(localStorage.getItem(KEY+"-sound")==="1") SOUND=true; }
 const synth=("speechSynthesis" in window)?window.speechSynthesis:null;
 function voicesNow(){ try{ const v=synth?synth.getVoices():[]; if(v&&v.length) VOICES=v; }catch(e){} return VOICES; }
 function loadVoices(){ voicesNow(); fillVoices(); }
-let VOICE_PREF=null; try{ VOICE_PREF=localStorage.getItem(KEY+"-voice"); }catch(e){}
+let VOICE_PREF=null, VOICE_PREF_AR=null; try{ VOICE_PREF=localStorage.getItem(KEY+"-voice"); VOICE_PREF_AR=localStorage.getItem(KEY+"-voicear"); }catch(e){}
+/* novelty / effect voices of Apple devices are not offered as narrators */
+const FX=/^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Deranged|Hysterical|Pipe Organ)\b/i;
 const isEn=v=>(v.lang||"").toLowerCase().startsWith("en"), isAr=v=>(v.lang||"").toLowerCase().startsWith("ar");
 function defaultEn(){ const en=VOICES.filter(isEn);
   return en.find(v=>v.name==="Daniel"&&/en-GB/i.test(v.lang)) || en.find(v=>/^daniel\b/i.test(v.name)) || en.find(v=>/en-GB/i.test(v.lang)&&v.localService) || en.find(v=>/en-GB/i.test(v.lang)) || en.find(v=>v.localService) || en[0] || null; }
 function defaultAr(){ const ar=VOICES.filter(isAr); return ar.find(v=>v.localService)||ar[0]||null; }
-function fillVoices(){ const sel=$("vvoice"); const en=VOICES.filter(isEn);
+function fillVoices(){ const tt=t(); if($("vvoicel")) $("vvoicel").textContent=tt.vEnL; if($("vvoicearl")) $("vvoicearl").textContent=tt.vArL;
+  { const sa=$("vvoicear"); const ar=VOICES.filter(v=>isAr(v)&&!FX.test(v.name)); const da=defaultAr(); const ka=VOICE_PREF_AR||sa.value;
+    sa.innerHTML=ar.length?ar.map(v=>`<option value="${esc(v.name)}">${esc(v.name)} (${esc(v.lang)})${da&&v.name===da.name?" ★":""}</option>`).join(""):`<option value="">${esc(tt.novoice)}</option>`;
+    sa.value=ar.some(v=>v.name===ka)?ka:(da?da.name:""); }
+  const sel=$("vvoice"); const en=VOICES.filter(v=>isEn(v)&&!FX.test(v.name));
   const keep=VOICE_PREF||sel.value; const d=defaultEn();
   sel.innerHTML=en.length?en.map(v=>`<option value="${esc(v.name)}">${esc(v.name)} (${esc(v.lang)})${d&&v.name===d.name?" ★":""}</option>`).join(""):`<option value="">${esc(t().novoice)}</option>`;
   sel.value=en.some(v=>v.name===keep)?keep:(d?d.name:""); }
 if(synth){ loadVoices(); try{ synth.addEventListener?synth.addEventListener("voiceschanged",loadVoices):(synth.onvoiceschanged=loadVoices); }catch(e){}
   let tries=0; const poll=setInterval(()=>{ const had=VOICES.length; voicesNow(); if(VOICES.length!==had) fillVoices(); if(VOICES.length||++tries>60) clearInterval(poll); },250); }
-function pickVoice(arabic){ voicesNow(); if(arabic) return defaultAr(); const want=$("vvoice").value; return VOICES.find(x=>x.name===want&&isEn(x)) || defaultEn(); }
+function pickVoice(arabic){ voicesNow(); if(arabic){ const wa=$("vvoicear").value; return VOICES.find(x=>x.name===wa&&isAr(x)) || defaultAr(); } const want=$("vvoice").value; return VOICES.find(x=>x.name===want&&isEn(x)) || defaultEn(); }
+/* ---- Arabic pronunciation: vocalised forms of the shooting terms the device voice tends to misread ---- */
+const SAY_AR=[["لجنة الحكام","لَجْنَةُ الحُكَّام"],["ضباط الميدان","ضُبَّاطِ المَيْدَان"],["رئيس ضباط الميدان","رَئِيسُ ضُبَّاطِ المَيْدَان"],["ضابط الميدان","ضَابِطُ المَيْدَان"],
+ ["الشحنة الدافعة","الشُّحْنَةَ الدَّافِعَة"],["الإعداد والاختبار","الإِعْدَادِ وَالاِخْتِبَار"],["الدائرة الكاملة","الدَّائِرَةِ الكَامِلَة"],["الكسور العشرية","الكُسُورِ العَشْرِيَّة"],["العشرات الداخلية","العَشَرَاتِ الدَّاخِلِيَّة"],
+ ["رشتين","رَشَّتَيْن"],["رشتان","رَشَّتَان"],["رشة","رَشَّة"],["المرتكز","المُرْتَكِز"],["مرتكز","مُرْتَكِز"],["الراقد","الرَّاقِد"],["راقد","رَاقِد"],["الواقف","الوَاقِف"],
+ ["طلقتين","طَلْقَتَيْن"],["طلقتان","طَلْقَتَان"],["طلقات","طَلَقَات"],["طلقة","طَلْقَة"],["طلقته","طَلْقَتَه"],["الحكام","الحُكَّام"],["ضباط","ضُبَّاط"],["الاختبار","الاِخْتِبَار"],["الإعداد","الإِعْدَاد"],
+ ["تُحتسب","تُحْتَسَب"],["تحتسب","تُحْتَسَب"],["تُسجَّل","تُسَجَّل"],["صفراً","صِفْرًا"],["صفرا","صِفْرًا"],["أصفاراً","أَصْفَارًا"],["صفر","صِفْر"],["مخالفة","مُخَالَفَة"],["المخالفة","المُخَالَفَة"],["خصم","خَصْم"],["يُخصم","يُخْصَم"],
+ ["نقطتان","نُقْطَتَان"],["نقطتين","نُقْطَتَيْن"],["القطار","القِطَار"],["قطار","قِطَار"],["القطارات","القِطَارَات"],["الهدف","الهَدَف"],["هدف","هَدَف"],["أهداف","أَهْدَاف"],["الأهداف","الأَهْدَاف"],
+ ["النداء","النِّدَاء"],["الخط","الخَطّ"],["النهائي","النِّهَائِي"],["النهائيات","النِّهَائِيَّات"],["سيدة","سَيِّدَة"],["لاعبة","لاعِبَة"],["رجل","رَجُل"],["عطل","عُطْل"],["مسدس","مُسَدَّس"],["المسدس","المُسَدَّس"],
+ ["بندقية","بُنْدُقِيَّة"],["البندقية","البُنْدُقِيَّة"],["المجموعة","المَجْمُوعَة"],["مجموعة","مَجْمُوعَة"],["التأهيل","التَّأْهِيل"],["التعادل","التَّعَادُل"],["يُفض","يُفَضّ"],["الذخيرة","الذَّخِيرَة"],
+ ["10م","عَشَرَةِ أَمْتَار"],["50م","خَمْسِينَ مِتْرًا"],["م1","المَجْمُوعَةُ الأُولَى"]];
+const AL="\\u0600-\\u06FF";
+const SAY_RE=SAY_AR.sort((a,b)=>b[0].length-a[0].length).map(([w,v])=>[new RegExp("(^|[^"+AL+"])([وفب]?)"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?=$|[^"+AL+"])","g"),v]);
+function sayAr(t){ let o=" "+t+" "; SAY_RE.forEach(([re,v])=>{ o=o.replace(re,(m,a,b)=>a+b+v); }); return o.trim(); }
+/* an Arabic sentence with English commands inside is read in pieces: Arabic by the Arabic voice, English by the English voice */
+function sayPieces(pt){ if(!/[؀-ۿ]/.test(pt)) return [{t:pt,ar:false}];
+  const out=[]; const re=/[A-Za-z][A-Za-z0-9'’\-]*(?:[ .…·]+[A-Za-z0-9][A-Za-z0-9'’\-]*)*/g; let last=0, m;
+  while((m=re.exec(pt))){ const a=pt.slice(last,m.index); if(/[؀-ۿ0-9]/.test(a)) out.push({t:sayAr(a),ar:true}); out.push({t:m[0],ar:false}); last=m.index+m[0].length; }
+  const r=pt.slice(last); if(/[؀-ۿ0-9]/.test(r)) out.push({t:sayAr(r),ar:true}); return out; }
 function speak(text){
   if(!synth||!SOUND||!text) return;
   const parts=String(text).split(/(?<=[.!?؟…])\s+/).map(x=>x.trim()).filter(Boolean);
   const rate=[1,.8,1.2][$("vrate").selectedIndex]||1;
-  const run=()=>{ try{ window.__apU=[]; parts.forEach(pt=>{ const arabic=/[؀-ۿ]/.test(pt); const v=pickVoice(arabic); const u=new SpeechSynthesisUtterance(pt);
+  const run=()=>{ try{ window.__apU=[]; parts.flatMap(sayPieces).forEach(pc=>{ const pt=pc.t, arabic=pc.ar; const v=pickVoice(arabic); const u=new SpeechSynthesisUtterance(pt);
       if(v){u.voice=v;u.lang=v.lang;} else u.lang=arabic?"ar":"en-GB"; u.rate=rate; u.volume=1; window.__apU.push(u); synth.speak(u); }); if(synth.paused&&synth.resume) synth.resume(); }catch(e){} };
   try{ if(synth.speaking||synth.pending){ synth.cancel(); setTimeout(run,80); } else run(); }catch(e){}
 }
@@ -976,7 +1019,7 @@ if(!synth){ $("bvoice").disabled=true; }
 const INFOS=[
  {h:{ar:"الفريق",en:"The team"},p:{ar:"لاعبان من نفس الدولة (لاعب ولاعبة). حد أقصى فريقان لكل دولة. يجوز تغيير الأعضاء حتى 12:00 قبل يومين من المسابقة، وإلا يُحددون عشوائياً.",en:"Two athletes from the same nation (1 male, 1 female). Max two teams per nation. Members may be changed until 12:00 two days before the event, otherwise they are drawn at random."}},
  {h:{ar:"البرنامج",en:"Programme"},p:{ar:"30 طلقة لكل عضو (60 للفريق) في 40 دقيقة، ويرمي كل لاعب مستقلاً عن زميله. 15 دقيقة إعداد واختبار. البندقية بالكسور العشرية والمسدس بالدائرة الكاملة.",en:"30 shots per member (60 per team) in 40 minutes, each athlete independent of the partner. 15 minutes preparation and sighting. Rifle decimal, pistol full ring."}},
- {h:{ar:"الجدول الزمني",en:"Timeline"},p:{ar:"−25:00 ATHLETES TO THE LINE · 10 دقائق تجهيز · PREPARATION AND SIGHTING TIME … START · بعد 14:30 «30 SECONDS» · END OF PREPARATION AND SIGHTING … STOP · 0:00 MATCH FIRING … START · 10 MINUTES عند 30:00 و5 MINUTES عند 35:00 · STOP عند 40:00.",en:"−25:00 ATHLETES TO THE LINE · 10 minutes set-up · PREPARATION AND SIGHTING TIME … START · after 14:30 “30 SECONDS” · END OF PREPARATION AND SIGHTING … STOP · 0:00 MATCH FIRING … START · 10 MINUTES at 30:00, 5 MINUTES at 35:00 · STOP at 40:00."}},
+ {h:{ar:"الجدول الزمني",en:"Timeline"},p:{ar:"ATHLETES TO THE LINE قبل وقت البداية بـ 25 دقيقة · بعد 10 دقائق تجهيز وفحوصات: PREPARATION AND SIGHTING TIME … START · بعد 14 دقيقة و30 ثانية: «30 SECONDS» · بعد 30 ثانية: END OF PREPARATION AND SIGHTING … STOP · بعد حوالي 30 ثانية لإعادة ضبط الأهداف: MATCH FIRING … START · بعد 30 دقيقة: «10 MINUTES» · بعد 5 دقائق: «5 MINUTES» · بعد 5 دقائق: STOP. يرمي كل لاعب طلقاته الثلاثين (30) بسرعته طوال زمن المباراة (40 دقيقة)، وليس مجموعة بمجموعة.",en:"ATHLETES TO THE LINE 25 minutes before the start time · after 10 minutes set-up and checks: PREPARATION AND SIGHTING TIME … START · after 14 min 30 s: “30 SECONDS” · after 30 seconds: END OF PREPARATION AND SIGHTING … STOP · about 30 seconds to reset the targets: MATCH FIRING … START · after 30 minutes: “10 MINUTES” · after 5 minutes: “5 MINUTES” · after 5 minutes: STOP. Each athlete fires all 30 shots at their own pace within the match time (40 minutes), not series by series."}},
  {h:{ar:"نقاط الرمي",en:"Firing points"},p:{ar:"بالقرعة الحاسوبية (6.6.6). عضوا الفريق متجاوران واللاعبة على اليسار، ولا تُوضع فرق الدولة الواحدة متجاورة.",en:"By computer draw (6.6.6). Team members side by side with the woman on the left; teams from the same nation not next to each other."}},
  {h:{ar:"الترتيب والتأهل",en:"Ranking & qualification"},p:{ar:"مجموع درجات العضوين. التعادل بالقاعدة 6.15.5 (مجموع العضوين مع إجراءات 6.15.1). أعلى أربعة فرق إلى النهائي.",en:"The total of both members. Ties by Rule 6.15.5 (members' total with the 6.15.1 procedure). Top four teams to the Final."}},
  {h:{ar:"التوجيه",en:"Coaching"},p:{ar:"في التأهيل يُسمح بالتوجيه غير اللفظي فقط. في النهائي مدرب واحد ووقت مستقطع (6.18.1.7 b–c).",en:"In qualification only non-verbal coaching. In the Final one coach and a timeout (6.18.1.7 b–c)."}},
@@ -1035,7 +1078,7 @@ const CASES=[
  {h:{ar:"31 طلقة",en:"31 shots"},x:{ar:"أطلق عضو فريق 31 طلقة مباراة.",en:"A team member fires 31 match shots."},
   q:{ar:"ما القرار؟",en:"What is the ruling?"},o:[{ar:"تُحتسب لزميلته",en:"It counts for the partner"},{ar:"تُلغى الزائدة على الهدف الأخير + خصم نقطتين من أقل طلقة في المجموعة الأولى",en:"The extra is annulled on the last target + −2 from the lowest shot of the first series"},{ar:"تُحتسب كلها",en:"All count"},{ar:"استبعاد",en:"Disqualification"}],a:1,
   e:{ar:"تُلغى الطلقة الزائدة على الهدف الأخير، ويُخصم نقطتان عن كل طلقة زائدة من أقل الطلقات قيمة في المجموعة الأولى، فتنقص من مجموع الفريق.",en:"The extra shot is annulled on the last target and 2 points per extra shot are deducted from the lowest shot(s) of the first series, reducing the team total."},r:"6.11.5"},
- {h:{ar:"طلقات لم تُطلق",en:"Shots not fired"},x:{ar:"عند STOP (40:00) كان أحد العضوين قد أطلق 27 طلقة.",en:"At STOP (40:00) one member has fired 27 shots."},
+ {h:{ar:"طلقات لم تُطلق",en:"Shots not fired"},x:{ar:"عند STOP (بعد مرور 40 دقيقة من بدء زمن الرمي) كان أحد العضوين قد أطلق 27 طلقة.",en:"At STOP (40 minutes after MATCH firing starts) one member has fired 27 shots."},
   q:{ar:"ما الحكم؟",en:"What is the ruling?"},o:[{ar:"يكملها زميله",en:"The partner completes them"},{ar:"ثلاثة أصفار على الهدف/الأهداف الأخيرة",en:"Three misses on the last target(s)"},{ar:"وقت إضافي",en:"Extra time"},{ar:"يُستبعد الفريق",en:"Team disqualified"}],a:1,
   e:{ar:"الطلقات التي لم تُطلق خلال زمن المباراة تُحتسب أصفاراً على الأهداف الأخيرة ما لم يُؤذن بوقت إضافي، ولا يرمي الزميل عنه لأن كل لاعب يرمي مستقلاً.",en:"Shots not fired within the match time are misses on the last target(s) unless extra time was authorised; the partner cannot fire them, since each athlete fires independently."},r:"6.11.1.2 f · 6.18.2.5"},
  {h:{ar:"ترتيب العضوين",en:"Positions of the members"},x:{ar:"فريق يريد أن يرمي اللاعب على اليسار واللاعبة على اليمين في التأهيل.",en:"A team wants the man on the left and the woman on the right in qualification."},
@@ -1059,9 +1102,9 @@ const CASES=[
  {h:{ar:"الهوية الوطنية",en:"National identification"},x:{ar:"لاعب مسدس في فريق مختلط.",en:"A pistol athlete in a Mixed Team."},
   q:{ar:"أين يوضع رمز الدولة؟",en:"Where is the NOC shown?"},o:[{ar:"على الظهر",en:"On the back"},{ar:"على كم القميص أو السترة الرياضية في الجانب المواجه للجمهور",en:"On the sleeve of the T-shirt/sports jacket facing the audience"},{ar:"على القبعة",en:"On the cap"},{ar:"على جيب السترة",en:"On the jacket pocket"}],a:1,
   e:{ar:"المسدس: رمز الدولة الثلاثي على كم القميص أو السترة الرياضية المواجه للجمهور. البندقية: على جيب السترة المواجه للجمهور (أو العلم إذا كان الرمز موجوداً).",en:"Pistol: the 3-letter NOC on the sleeve facing the audience. Rifle: on the jacket pocket facing the audience (or the flag if the NOC is already there)."},r:"6.18.1.3"},
- {h:{ar:"النداء إلى الخط",en:"Call to the line"},x:{ar:"قطار تأهيل يبدأ 09:00.",en:"A qualification relay starts at 09:00."},
-  q:{ar:"متى ATHLETES TO THE LINE؟",en:"When is ATHLETES TO THE LINE?"},o:[{ar:"08:45",en:"08:45"},{ar:"08:35 على الأقل",en:"08:35 at the latest"},{ar:"08:30",en:"08:30"},{ar:"08:50",en:"08:50"}],a:1,
-  e:{ar:"قبل البداية بخمس وعشرين (25) دقيقة على الأقل: 10 دقائق للتجهيز ثم 15 دقيقة إعداد واختبار.",en:"At least twenty-five (25) minutes before the start: 10 minutes to set up, then 15 minutes of preparation and sighting."},r:"6.11.1.1"},
+ {h:{ar:"النداء إلى الخط",en:"Call to the line"},x:{ar:"يقترب وقت بداية قطار التأهيل.",en:"The start time of a qualification relay is approaching."},
+  q:{ar:"متى ATHLETES TO THE LINE؟",en:"When is ATHLETES TO THE LINE?"},o:[{ar:"قبل وقت البداية بـ 15 دقيقة",en:"15 minutes before the start time"},{ar:"قبل وقت البداية بـ 25 دقيقة",en:"25 minutes before the start time"},{ar:"قبل وقت البداية بـ 30 دقيقة",en:"30 minutes before the start time"},{ar:"قبل وقت البداية بـ 10 دقائق",en:"10 minutes before the start time"}],a:1,
+  e:{ar:"قبل وقت البداية بخمس وعشرين (25) دقيقة: 10 دقائق للتجهيز ثم 15 دقيقة إعداد واختبار.",en:"Twenty-five (25) minutes before the start time: 10 minutes to set up, then 15 minutes of preparation and sighting."},r:"6.11.1.1"},
  {h:{ar:"قبل النداء",en:"Before the call"},x:{ar:"وصل لاعب مبكراً ويريد وضع سلاحه على نقطة الرمي قبل النداء.",en:"An athlete arrives early and wants to put his gun on the firing point before the call."},
   q:{ar:"هل يُسمح؟",en:"Is it allowed?"},o:[{ar:"نعم",en:"Yes"},{ar:"لا، فقط بعد أن يستدعي رئيس ضباط الميدان اللاعبين إلى الخط",en:"No, only after the CRO calls the athletes to the line"},{ar:"بإذن ضابط الميدان",en:"With a Range Officer's permission"},{ar:"المعدات فقط",en:"Equipment only"}],a:1,
   e:{ar:"لا يُسمح بوضع الأسلحة والمعدات على نقاط الرمي إلا بعد أن يستدعي رئيس ضباط الميدان اللاعبين إلى الخط.",en:"Guns and equipment may not be placed on the firing points until the CRO has called the athletes to the line."},r:"6.11.1.1 c"},
@@ -1076,7 +1119,7 @@ const CASES=[
   e:{ar:"إذا لم يتعلق الأمر بالسلامة تُسجَّل أول طلقة مباراة صفراً؛ وإذا تعلق بالسلامة يجوز الاستبعاد.",en:"If safety is not involved the first competition shot is recorded as a miss; if safety is involved he may be disqualified."},r:"6.11.1.1 h"},
  {h:{ar:"إعلان 30 ثانية",en:"30 SECONDS call"},x:{ar:"يجري زمن الإعداد والاختبار.",en:"Preparation and sighting is running."},
   q:{ar:"متى يُعلن 30 SECONDS؟",en:"When is 30 SECONDS announced?"},o:[{ar:"بعد 15 دقيقة",en:"After 15 minutes"},{ar:"بعد 14 دقيقة و30 ثانية",en:"After 14 minutes 30 seconds"},{ar:"قبل البداية بدقيقة",en:"1 minute before the start"},{ar:"لا يُعلن",en:"Not announced"}],a:1,
-  e:{ar:"بعد مرور 14 دقيقة و30 ثانية من زمن الإعداد والاختبار يعلن رئيس ضباط الميدان 30 SECONDS.",en:"After 14:30 of Preparation and Sighting Time the Chief Range Officer announces 30 SECONDS."},r:"6.11.1.1 i"},
+  e:{ar:"بعد مرور 14 دقيقة و30 ثانية من زمن الإعداد والاختبار يعلن رئيس ضباط الميدان 30 SECONDS.",en:"After 14 min 30 s of Preparation and Sighting Time the Chief Range Officer announces 30 SECONDS."},r:"6.11.1.1 i"},
  {h:{ar:"طلقة اختبار بعد البدء",en:"Sighter after START"},x:{ar:"في الدقيقة 30 من المباراة حوّل لاعب هدفه إلى الاختبار وأطلق طلقة اختبار دون إذن.",en:"At minute 30 an athlete switches to sighting and fires a sighter without permission."},
   q:{ar:"ما القرار؟",en:"What is the ruling?"},o:[{ar:"مسموح",en:"Allowed"},{ar:"تُحتسب صفراً في المسابقة",en:"Scored as a miss in the competition"},{ar:"خصم نقطتين",en:"−2 points"},{ar:"إنذار",en:"A warning"}],a:1,
   e:{ar:"بعد بدء المباراة لا يُسمح بطلقات اختبار (إلا لتغيير الوضع في 3 أوضاع أو بإذن لجنة الحكام)، وأي طلقة اختبار مخالفة تُسجَّل صفراً.",en:"After MATCH START no further sighters are allowed (except 3P position changes or when the Jury permits); any such sighter is scored as a miss."},r:"6.11.1.2 c, d"},
@@ -1145,7 +1188,10 @@ $("seek").oninput=e=>{stopPlay(); $("gate").hidden=true; go(+e.target.value,fals
 [1,2,4,8,16].forEach(v=>{ $("sp"+v).onclick=()=>{SPEED=v; [1,2,4,8,16].forEach(w=>$("sp"+w).setAttribute("aria-pressed",SPEED===w));}; });
 $("scen").onchange=e=>newScenario(+e.target.value);
 $("bstart").onclick=()=>{stopPlay(); closeTrainer(); $("gate").hidden=true; go(0,false);};
-$("vmode").onchange=()=>speakStep(); $("vvoice").onchange=e=>{ VOICE_PREF=e.target.value; try{localStorage.setItem(KEY+"-voice",VOICE_PREF)}catch(x){} speak("START"); }; $("vrate").onchange=()=>speakStep();
+$("vmode").onchange=()=>speakStep(); function sampleVoice(arabic){ const was=SOUND; SOUND=true; speak(arabic?"انتباه. ابدأ.":"ATHLETES TO THE LINE."); SOUND=was; }
+$("vvoice").onchange=e=>{ VOICE_PREF=e.target.value; try{localStorage.setItem(KEY+"-voice",VOICE_PREF)}catch(x){} sampleVoice(false); };
+$("vvoicear").onchange=e=>{ VOICE_PREF_AR=e.target.value; try{localStorage.setItem(KEY+"-voicear",VOICE_PREF_AR)}catch(x){} sampleVoice(true); };
+$("vtesten").onclick=()=>sampleVoice(false); $("vtestar").onclick=()=>sampleVoice(true); $("vrate").onchange=()=>speakStep();
 function applyNames(){ computeNames(); saveNames(); rebuild(true); render(false); }
 function renderNames(){ const tt=t(); const box=$("names"); box.innerHTML="";
   $("usenames").checked=USE_NAMES; $("usenamesl").textContent=tt.usenames; $("namespanel").hidden=!USE_NAMES;
